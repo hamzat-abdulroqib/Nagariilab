@@ -51,27 +51,28 @@ function NavMenu() {
       <SidebarMenu>
         {navItems.map((item) => {
           const button = (
-            <SidebarMenuButton
+             <SidebarMenuButton
+              asChild
               isActive={pathname === item.href}
             >
-              <item.icon />
-              <span>{item.label}</span>
+              <Link href={item.href}>
+                <item.icon />
+                <span>{item.label}</span>
+              </Link>
             </SidebarMenuButton>
           );
           return (
             <SidebarMenuItem key={item.href}>
-              <Link href={item.href} legacyBehavior passHref>
-                {sidebarState === 'collapsed' ? (
-                  <Tooltip>
-                    <TooltipTrigger asChild>{button}</TooltipTrigger>
-                    <TooltipContent side="right" align="center">
-                      {item.label}
-                    </TooltipContent>
-                  </Tooltip>
-                ) : (
-                  button
-                )}
-              </Link>
+               {sidebarState === 'collapsed' ? (
+                <Tooltip>
+                  <TooltipTrigger asChild>{button}</TooltipTrigger>
+                  <TooltipContent side="right" align="center">
+                    {item.label}
+                  </TooltipContent>
+                </Tooltip>
+              ) : (
+                button
+              )}
             </SidebarMenuItem>
           );
         })}
