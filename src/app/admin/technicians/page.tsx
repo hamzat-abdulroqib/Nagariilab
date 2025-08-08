@@ -1,5 +1,5 @@
 import { PageHeader } from '@/components/page-header';
-import { AssignmentManagement } from './components/assignment-management';
+import AssignmentManagement from './components/assignment-management';
 
 export default function TechniciansPage() {
   return (
