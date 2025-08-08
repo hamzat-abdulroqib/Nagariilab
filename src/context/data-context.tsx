@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -9,7 +10,7 @@ type DataContextType = {
   technicians: Technician[];
   labTests: LabTest[];
   payments: Payment[];
-  addPatient: (patientData: Omit<Patient, 'id' | 'patientId'>) => void;
+  addPatient: (patientData: Omit<Patient, 'id' | 'patientId'>) => Patient;
   addTechnician: (technicianData: Omit<Technician, 'id'>) => void;
   addTest: (testData: { patientId: string; testName: string }) => void;
   assignTest: (testId: string, technicianId: string) => void;
@@ -27,15 +28,14 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const [payments, setPayments] = React.useState<Payment[]>(mockPayments);
 
   const addPatient = (patientData: Omit<Patient, 'id' | 'patientId'>) => {
-    setPatients(prev => {
-        const newId = (prev.length + 1).toString();
-        const newPatient: Patient = {
-            id: newId,
-            patientId: `NML-00${newId}`,
-            ...patientData,
-        };
-        return [newPatient, ...prev];
-    });
+    const newId = (patients.length + 1).toString() + Date.now().toString();
+    const newPatient: Patient = {
+        id: newId,
+        patientId: `NML-00${patients.length + 1}`,
+        ...patientData,
+    };
+    setPatients(prev => [newPatient, ...prev]);
+    return newPatient;
   };
 
   const addTechnician = (technicianData: Omit<Technician, 'id'>) => {

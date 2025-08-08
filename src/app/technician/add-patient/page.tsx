@@ -1,5 +1,5 @@
 import { PageHeader } from '@/components/page-header';
-import { PatientManagement } from '@/app/patients/components/patient-management';
+import { PatientForm } from './components/patient-form';
 
 export default function AddPatientPage() {
   return (
@@ -9,7 +9,7 @@ export default function AddPatientPage() {
         description="Use the form below to add a new patient to the system."
       />
       <div className="max-w-2xl mx-auto">
-        <PatientManagement />
+        <PatientForm />
       </div>
     </>
   );

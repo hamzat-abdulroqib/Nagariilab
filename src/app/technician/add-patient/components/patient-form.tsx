@@ -2,6 +2,13 @@
 'use client';
 
 import * as React from 'react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
@@ -17,7 +24,8 @@ import {
 } from '@/components/ui/form';
 import { useData } from '@/context/data-context';
 import { useToast } from '@/hooks/use-toast';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { LogTestDialog } from './log-test-dialog';
+import type { Patient } from '@/lib/types';
 
 const addPatientSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -28,9 +36,11 @@ const addPatientSchema = z.object({
   }),
 });
 
-export function PatientManagement() {
+export function PatientForm() {
   const { toast } = useToast();
   const { addPatient } = useData();
+  const [newPatient, setNewPatient] = React.useState<Patient | null>(null);
+  const [isLogTestDialogOpen, setIsLogTestDialogOpen] = React.useState(false);
 
   const form = useForm<z.infer<typeof addPatientSchema>>({
     resolver: zodResolver(addPatientSchema),
@@ -38,22 +48,26 @@ export function PatientManagement() {
   });
 
   const onSubmit = (values: z.infer<typeof addPatientSchema>) => {
-    addPatient({
+    const createdPatient = addPatient({
       ...values,
       gender: 'Other',
       address: '',
     });
+
     form.reset();
     toast({
         title: "Patient Added",
         description: `${values.name} has been added to the patient list.`,
-    })
+    });
+    setNewPatient(createdPatient);
+    setIsLogTestDialogOpen(true);
   };
 
   return (
+    <>
     <Card>
       <CardHeader>
-        <CardTitle>Add New Patient</CardTitle>
+        <CardTitle>New Patient Details</CardTitle>
         <CardDescription>
           Fill in the details below to add a new patient record.
         </CardDescription>
@@ -114,11 +128,20 @@ export function PatientManagement() {
                 )}
             />
             <div className="flex justify-end pt-4">
-                <Button type="submit">Add Patient</Button>
+                <Button type="submit">Add Patient & Log Test</Button>
             </div>
             </form>
         </Form>
        </CardContent>
     </Card>
+
+    {newPatient && (
+        <LogTestDialog 
+            patient={newPatient}
+            isOpen={isLogTestDialogOpen}
+            onOpenChange={setIsLogTestDialogOpen}
+        />
+    )}
+    </>
   );
 }
