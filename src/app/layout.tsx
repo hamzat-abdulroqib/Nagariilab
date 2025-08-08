@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { DataProvider } from '@/context/data-context';
 
 export const metadata: Metadata = {
   title: 'MediTrack Lite',
@@ -24,10 +25,12 @@ export default function RootLayout({
         ></link>
       </head>
       <body className="font-body antialiased">
-        <TooltipProvider>
-          {children}
-        </TooltipProvider>
-        <Toaster />
+        <DataProvider>
+            <TooltipProvider>
+                {children}
+            </TooltipProvider>
+            <Toaster />
+        </DataProvider>
       </body>
     </html>
   );

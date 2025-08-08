@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { mockPatients } from '@/lib/mock-data';
 import type { Patient } from '@/lib/types';
 import { PlusCircle, Search } from 'lucide-react';
 import {
@@ -35,6 +34,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { useData } from '@/context/data-context';
+import { useToast } from '@/hooks/use-toast';
 
 const addPatientSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -46,8 +47,9 @@ const addPatientSchema = z.object({
 });
 
 export function PatientManagement() {
+  const { toast } = useToast();
+  const { patients, addPatient } = useData();
   const [search, setSearch] = React.useState('');
-  const [patients, setPatients] = React.useState<Patient[]>(mockPatients);
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
   const form = useForm<z.infer<typeof addPatientSchema>>({
@@ -56,16 +58,17 @@ export function PatientManagement() {
   });
 
   const onSubmit = (values: z.infer<typeof addPatientSchema>) => {
-    const newPatient: Patient = {
-      id: (patients.length + 1).toString(),
-      patientId: `NML-00${patients.length + 1}`,
+    addPatient({
       ...values,
       gender: 'Other',
       address: '',
-    };
-    setPatients([newPatient, ...patients]);
+    });
     form.reset();
     setIsDialogOpen(false);
+    toast({
+        title: "Patient Added",
+        description: `${values.name} has been added to the patient list.`,
+    })
   };
 
   const filteredPatients = patients.filter(
@@ -179,15 +182,23 @@ export function PatientManagement() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredPatients.map((patient) => (
-              <TableRow key={patient.id}>
-                <TableCell className="font-medium">{patient.patientId}</TableCell>
-                <TableCell>{patient.name}</TableCell>
-                <TableCell>{patient.dob}</TableCell>
-                <TableCell>{patient.phone}</TableCell>
-                <TableCell>{patient.email}</TableCell>
-              </TableRow>
-            ))}
+            {filteredPatients.length > 0 ? (
+                filteredPatients.map((patient) => (
+                <TableRow key={patient.id}>
+                    <TableCell className="font-medium">{patient.patientId}</TableCell>
+                    <TableCell>{patient.name}</TableCell>
+                    <TableCell>{patient.dob}</TableCell>
+                    <TableCell>{patient.phone}</TableCell>
+                    <TableCell>{patient.email}</TableCell>
+                </TableRow>
+                ))
+            ) : (
+                <TableRow>
+                    <TableCell colSpan={5} className="h-24 text-center">
+                        No patients found.
+                    </TableCell>
+                </TableRow>
+            )}
           </TableBody>
         </Table>
       </div>

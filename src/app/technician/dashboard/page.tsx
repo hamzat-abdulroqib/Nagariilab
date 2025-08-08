@@ -18,22 +18,22 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { PageHeader } from '@/components/page-header';
-import { mockLabTests, mockTechnicians } from '@/lib/mock-data';
-import type { LabTest } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { CheckCircle, Clock, FileText } from 'lucide-react';
 import { StatCard } from '@/components/stat-card';
+import { useData } from '@/context/data-context';
 
 // For demonstration, we'll assume technician with ID '2' is logged in.
 const LOGGED_IN_TECHNICIAN_ID = '2';
 
 export default function TechnicianDashboard() {
   const { toast } = useToast();
-  const [tests, setTests] = React.useState<LabTest[]>(mockLabTests);
-  const technician = mockTechnicians.find(t => t.id === LOGGED_IN_TECHNICIAN_ID);
+  const { labTests, technicians, completeTest } = useData();
+  
+  const technician = technicians.find(t => t.id === LOGGED_IN_TECHNICIAN_ID);
 
-  const assignedTests = tests.filter(
+  const assignedTests = labTests.filter(
     (test) => test.assignedTechnicianId === LOGGED_IN_TECHNICIAN_ID
   );
 
@@ -41,14 +41,8 @@ export default function TechnicianDashboard() {
   const completedTests = assignedTests.filter(t => t.status === 'Completed');
 
   const handleCompleteTest = (testId: string) => {
-    setTests((prevTests) =>
-      prevTests.map((test) =>
-        test.id === testId
-          ? { ...test, status: 'Completed', completedAt: new Date().toISOString(), result: 'Results pending review' }
-          : test
-      )
-    );
-     const completedTest = tests.find(t => t.id === testId);
+    completeTest(testId);
+     const completedTest = labTests.find(t => t.id === testId);
      if (completedTest) {
         toast({
             title: 'Test Marked as Complete',

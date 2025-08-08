@@ -16,28 +16,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
-import { mockLabTests, mockTechnicians } from '@/lib/mock-data';
-import type { LabTest } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useData } from '@/context/data-context';
 
 export function AssignmentManagement() {
   const { toast } = useToast();
-  const [tests, setTests] = React.useState<LabTest[]>(mockLabTests);
+  const { labTests, technicians, assignTest } = useData();
 
-  const unassignedTests = tests.filter((test) => test.status === 'Pending');
+  const unassignedTests = labTests.filter((test) => test.status === 'Pending');
 
   const handleAssign = (testId: string, technicianId: string) => {
-    setTests((prevTests) =>
-      prevTests.map((test) =>
-        test.id === testId
-          ? { ...test, assignedTechnicianId: technicianId, status: 'In Progress' }
-          : test
-      )
-    );
-    const assignedTest = tests.find(t => t.id === testId);
-    const technician = mockTechnicians.find(t => t.id === technicianId);
+    assignTest(testId, technicianId);
+    const assignedTest = labTests.find(t => t.id === testId);
+    const technician = technicians.find(t => t.id === technicianId);
     if(assignedTest && technician) {
       toast({
         title: 'Test Assigned',
@@ -77,7 +69,7 @@ export function AssignmentManagement() {
                           <SelectValue placeholder="Select Technician" />
                         </SelectTrigger>
                         <SelectContent>
-                          {mockTechnicians.map((technician) => (
+                          {technicians.map((technician) => (
                             <SelectItem key={technician.id} value={technician.id}>
                               {technician.name} ({technician.specialization})
                             </SelectItem>

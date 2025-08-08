@@ -1,5 +1,5 @@
 'use client';
-
+import * as React from 'react';
 import { PageHeader } from '@/components/page-header';
 import { StatCard } from '@/components/stat-card';
 import {
@@ -17,15 +17,8 @@ import {
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 import { Users, FlaskConical, TestTube, DollarSign } from 'lucide-react';
 import type { ChartConfig } from '@/components/ui/chart';
-
-const chartData = [
-  { month: 'January', tests: 186 },
-  { month: 'February', tests: 305 },
-  { month: 'March', tests: 237 },
-  { month: 'April', tests: 173 },
-  { month: 'May', tests: 209 },
-  { month: 'June', tests: 214 },
-];
+import { useData } from '@/context/data-context';
+import { format, subMonths, getMonth } from 'date-fns';
 
 const chartConfig = {
   tests: {
@@ -35,6 +28,34 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function Dashboard() {
+    const { patients, labTests } = useData();
+
+    const testsInProgress = labTests.filter(t => t.status === 'In Progress').length;
+    const completedTests = labTests.filter(t => t.status === 'Completed').length;
+
+    const monthlyTestCounts = React.useMemo(() => {
+        const now = new Date();
+        const counts = Array.from({ length: 6 }, (_, i) => {
+          const month = subMonths(now, 5 - i);
+          return {
+            month: format(month, 'MMMM'),
+            tests: 0,
+          };
+        });
+    
+        labTests.forEach(test => {
+          const monthIndex = getMonth(new Date(test.createdAt));
+          const monthName = format(new Date(test.createdAt), 'MMMM');
+          const countEntry = counts.find(c => c.month === monthName);
+          if (countEntry) {
+            countEntry.tests += 1;
+          }
+        });
+    
+        return counts;
+      }, [labTests]);
+
+
   return (
     <div>
       <PageHeader
@@ -45,27 +66,27 @@ export default function Dashboard() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
         <StatCard
           title="Total Patients"
-          value="1,204"
+          value={patients.length.toString()}
           icon={<Users className="h-4 w-4 text-muted-foreground" />}
-          description="+20.1% from last month"
+          description="Total registered patients"
         />
         <StatCard
           title="Tests In Progress"
-          value="76"
+          value={testsInProgress.toString()}
           icon={<FlaskConical className="h-4 w-4 text-muted-foreground" />}
-          description="+15 since last hour"
+          description="Tests currently being processed"
         />
         <StatCard
           title="Completed Tests"
-          value="5,421"
+          value={completedTests.toString()}
           icon={<TestTube className="h-4 w-4 text-muted-foreground" />}
-          description="+180.1% from last month"
+          description="Total tests completed"
         />
         <StatCard
           title="Revenue (This Month)"
-          value="$24,280"
+          value="$0"
           icon={<DollarSign className="h-4 w-4 text-muted-foreground" />}
-          description="+45% from last month"
+          description="Not implemented yet"
         />
       </div>
 
@@ -78,7 +99,7 @@ export default function Dashboard() {
         </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig} className="h-[300px] w-full">
-            <BarChart accessibilityLayer data={chartData}>
+            <BarChart accessibilityLayer data={monthlyTestCounts}>
               <CartesianGrid vertical={false} />
               <XAxis
                 dataKey="month"

@@ -26,10 +26,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { mockLabTests, mockPatients } from '@/lib/mock-data';
-import type { LabTest } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {
@@ -40,6 +38,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { useData } from '@/context/data-context';
 
 const logTestSchema = z.object({
   patientId: z.string().nonempty('Patient is required'),
@@ -48,7 +47,7 @@ const logTestSchema = z.object({
 
 export function TestManagement() {
   const { toast } = useToast();
-  const [tests, setTests] = React.useState<LabTest[]>(mockLabTests);
+  const { labTests, patients, addTest } = useData();
 
   const form = useForm<z.infer<typeof logTestSchema>>({
     resolver: zodResolver(logTestSchema),
@@ -56,21 +55,14 @@ export function TestManagement() {
   });
 
   const onSubmit = (values: z.infer<typeof logTestSchema>) => {
-    const patient = mockPatients.find((p) => p.id === values.patientId);
+    const patient = patients.find((p) => p.id === values.patientId);
     if (!patient) return;
 
-    const newTest: LabTest = {
-      id: (tests.length + 1).toString(),
-      patientId: values.patientId,
-      patientName: patient.name,
-      testName: values.testName,
-      status: 'Pending',
-      result: null,
-      assignedTechnicianId: null,
-      createdAt: new Date().toISOString(),
-      completedAt: null,
-    };
-    setTests([newTest, ...tests]);
+    addTest({
+        patientId: values.patientId,
+        testName: values.testName,
+    });
+
     form.reset();
     toast({
       title: 'Test Logged',
@@ -104,7 +96,7 @@ export function TestManagement() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {mockPatients.map((patient) => (
+                          {patients.map((patient) => (
                             <SelectItem key={patient.id} value={patient.id}>
                               {patient.name} ({patient.patientId})
                             </SelectItem>
@@ -147,7 +139,7 @@ export function TestManagement() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {tests.map((test) => (
+              {labTests.map((test) => (
                 <TableRow key={test.id}>
                   <TableCell className="font-medium">{test.testName}</TableCell>
                   <TableCell>{test.patientName}</TableCell>
