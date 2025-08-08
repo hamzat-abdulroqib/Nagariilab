@@ -17,12 +17,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { CheckCircle, Clock, FileText } from 'lucide-react';
 import { StatCard } from '@/components/stat-card';
 import { useData } from '@/context/data-context';
+import { PageHeader } from '@/components/page-header';
 
 // For demonstration, we'll assume technician with ID '2' is logged in.
 const LOGGED_IN_TECHNICIAN_ID = '2';
@@ -58,9 +58,9 @@ export default function MyWorkPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
+       <PageHeader
         title={`Welcome, ${technician.name}`}
-        description={`Here are the tests assigned to you. Specialization: ${technician.specialization}`}
+        description="Here are the tests assigned to you."
       />
       <div className="grid gap-4 md:grid-cols-3">
           <StatCard 
