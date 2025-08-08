@@ -10,13 +10,27 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
-import { Search } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Search, Trash2 } from 'lucide-react';
 import { useData } from '@/context/data-context';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { useToast } from '@/hooks/use-toast';
 
 export default function PatientManagement() {
-  const { patients } = useData();
+  const { patients, removePatient } = useData();
   const [search, setSearch] = React.useState('');
+  const { toast } = useToast();
 
   const filteredPatients = patients.filter(
     (patient) =>
@@ -24,6 +38,15 @@ export default function PatientManagement() {
       patient.patientId.toLowerCase().includes(search.toLowerCase()) ||
       patient.phone.includes(search)
   );
+
+  const handleRemovePatient = (patientId: string, patientName: string) => {
+    removePatient(patientId);
+    toast({
+        title: "Patient Removed",
+        description: `${patientName} has been removed from the system.`,
+        variant: 'destructive',
+    });
+  }
 
   return (
     <Card>
@@ -54,6 +77,7 @@ export default function PatientManagement() {
                     <TableHead>Date of Birth</TableHead>
                     <TableHead>Phone</TableHead>
                     <TableHead>Email</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -65,11 +89,34 @@ export default function PatientManagement() {
                             <TableCell>{patient.dob}</TableCell>
                             <TableCell>{patient.phone}</TableCell>
                             <TableCell>{patient.email}</TableCell>
+                            <TableCell className="text-right">
+                                <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                        <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
+                                            <Trash2 className="h-4 w-4" />
+                                        </Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            This action cannot be undone. This will permanently delete the patient record for {patient.name}.
+                                        </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                        <AlertDialogAction onClick={() => handleRemovePatient(patient.id, patient.name)} className="bg-destructive hover:bg-destructive/90">
+                                            Delete
+                                        </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+                            </TableCell>
                         </TableRow>
                         ))
                     ) : (
                         <TableRow>
-                            <TableCell colSpan={5} className="h-24 text-center">
+                            <TableCell colSpan={6} className="h-24 text-center">
                                 No patients found.
                             </TableCell>
                         </TableRow>

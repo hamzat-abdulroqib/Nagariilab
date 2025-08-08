@@ -13,6 +13,8 @@ export interface Technician {
   id: string;
   name: string;
   specialization: string;
+  email: string;
+  phone: string;
 }
 
 export interface LabTest {

@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { PlusCircle } from 'lucide-react';
+import { PlusCircle, Trash2 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -29,6 +29,17 @@ import {
   DialogFooter,
   DialogClose,
 } from '@/components/ui/dialog';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -46,28 +57,39 @@ import { useToast } from '@/hooks/use-toast';
 const addTechnicianSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   specialization: z.string().min(3, 'Specialization must be at least 3 characters'),
+  email: z.string().email('Invalid email address'),
+  phone: z.string().min(10, 'Phone number seems too short'),
 });
 
 
 export default function TechnicianManagement() {
-  const { technicians, addTechnician } = useData();
+  const { technicians, addTechnician, removeTechnician } = useData();
   const { toast } = useToast();
-  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false);
 
   const form = useForm<z.infer<typeof addTechnicianSchema>>({
     resolver: zodResolver(addTechnicianSchema),
-    defaultValues: { name: '', specialization: '' },
+    defaultValues: { name: '', specialization: '', email: '', phone: '' },
   });
 
   const onSubmit = (values: z.infer<typeof addTechnicianSchema>) => {
     addTechnician(values);
     form.reset();
-    setIsDialogOpen(false);
+    setIsAddDialogOpen(false);
     toast({
         title: "Technician Added",
         description: `${values.name} has been added to the system.`,
     })
   };
+
+  const handleRemoveTechnician = (technicianId: string, technicianName: string) => {
+    removeTechnician(technicianId);
+    toast({
+        title: "Technician Removed",
+        description: `${technicianName} has been removed from the system.`,
+        variant: 'destructive',
+    });
+  }
 
   return (
     <Card>
@@ -78,7 +100,7 @@ export default function TechnicianManagement() {
             A list of all technicians in the system.
             </CardDescription>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
             <Button>
               <PlusCircle className="mr-2 h-4 w-4" />
@@ -93,7 +115,7 @@ export default function TechnicianManagement() {
               </DialogDescription>
             </DialogHeader>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
                 <FormField
                   control={form.control}
                   name="name"
@@ -120,6 +142,32 @@ export default function TechnicianManagement() {
                     </FormItem>
                   )}
                 />
+                 <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input placeholder="tech@example.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                 <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone</FormLabel>
+                      <FormControl>
+                        <Input placeholder="123-456-7890" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <DialogFooter>
                   <DialogClose asChild>
                     <Button type="button" variant="secondary">Cancel</Button>
@@ -139,6 +187,9 @@ export default function TechnicianManagement() {
                 <TableHead>Technician ID</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Specialization</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Phone</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -150,11 +201,36 @@ export default function TechnicianManagement() {
                     </TableCell>
                     <TableCell>{technician.name}</TableCell>
                     <TableCell>{technician.specialization}</TableCell>
+                    <TableCell>{technician.email}</TableCell>
+                    <TableCell>{technician.phone}</TableCell>
+                    <TableCell className="text-right">
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
+                                    <Trash2 className="h-4 w-4" />
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    This action cannot be undone. This will permanently delete the technician {technician.name}.
+                                </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => handleRemoveTechnician(technician.id, technician.name)} className="bg-destructive hover:bg-destructive/90">
+                                    Delete
+                                </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                    </TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={3} className="h-24 text-center">
+                  <TableCell colSpan={6} className="h-24 text-center">
                     No technicians found.
                   </TableCell>
                 </TableRow>

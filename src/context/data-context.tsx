@@ -11,7 +11,9 @@ type DataContextType = {
   labTests: LabTest[];
   payments: Payment[];
   addPatient: (patientData: Omit<Patient, 'id' | 'patientId'>) => Patient;
+  removePatient: (patientId: string) => void;
   addTechnician: (technicianData: Omit<Technician, 'id'>) => void;
+  removeTechnician: (technicianId: string) => void;
   addTest: (testData: { patientId: string; testName: string }) => void;
   assignTest: (testId: string, technicianId: string) => void;
   completeTest: (testId: string) => void;
@@ -38,9 +40,16 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     return newPatient;
   };
 
+  const removePatient = (patientId: string) => {
+    setPatients(prev => prev.filter(p => p.id !== patientId));
+    // Also remove associated tests and payments
+    setLabTests(prev => prev.filter(t => t.patientId !== patientId));
+    setPayments(prev => prev.filter(p => p.patientId !== patientId));
+  }
+
   const addTechnician = (technicianData: Omit<Technician, 'id'>) => {
     setTechnicians(prev => {
-        const newId = (prev.length + 1).toString();
+        const newId = (prev.length + 1).toString() + Date.now().toString();
         const newTechnician: Technician = {
             id: newId,
             ...technicianData,
@@ -49,13 +58,23 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     });
   }
 
+  const removeTechnician = (technicianId: string) => {
+    setTechnicians(prev => prev.filter(t => t.id !== technicianId));
+    // Also unassign tests from this technician
+    setLabTests(prev => prev.map(test => 
+        test.assignedTechnicianId === technicianId 
+        ? { ...test, assignedTechnicianId: null, status: 'Pending' } 
+        : test
+    ));
+  }
+
   const addTest = (testData: { patientId: string; testName: string }) => {
     const patient = patients.find(p => p.id === testData.patientId);
     if (!patient) return;
 
     setLabTests(prev => {
         const newTest: LabTest = {
-            id: (prev.length + 1).toString(),
+            id: (prev.length + 1).toString() + Date.now().toString(),
             patientId: testData.patientId,
             patientName: patient.name,
             testName: testData.testName,
@@ -103,7 +122,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 
     setPayments(prev => {
         const newPayment: Payment = {
-            id: (prev.length + 1).toString(),
+            id: (prev.length + 1).toString() + Date.now().toString(),
             patientId: paymentData.patientId,
             patientName: patient.name,
             amount: paymentData.amount,
@@ -121,7 +140,9 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         labTests,
         payments,
         addPatient,
+        removePatient,
         addTechnician,
+        removeTechnician,
         addTest,
         assignTest,
         completeTest,

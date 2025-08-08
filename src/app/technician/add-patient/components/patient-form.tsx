@@ -22,6 +22,14 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+  } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import { useData } from '@/context/data-context';
 import { useToast } from '@/hooks/use-toast';
 import { LogTestDialog } from './log-test-dialog';
@@ -34,6 +42,8 @@ const addPatientSchema = z.object({
   dob: z.string().refine((val) => !isNaN(Date.parse(val)), {
     message: 'Invalid date of birth',
   }),
+  gender: z.enum(['Male', 'Female', 'Other']),
+  address: z.string().min(5, 'Address seems too short'),
 });
 
 export function PatientForm() {
@@ -44,15 +54,11 @@ export function PatientForm() {
 
   const form = useForm<z.infer<typeof addPatientSchema>>({
     resolver: zodResolver(addPatientSchema),
-    defaultValues: { name: '', email: '', phone: '', dob: '' },
+    defaultValues: { name: '', email: '', phone: '', dob: '', address: '' },
   });
 
   const onSubmit = (values: z.infer<typeof addPatientSchema>) => {
-    const createdPatient = addPatient({
-      ...values,
-      gender: 'Other',
-      address: '',
-    });
+    const createdPatient = addPatient(values);
 
     form.reset();
     toast({
@@ -101,6 +107,7 @@ export function PatientForm() {
                 </FormItem>
                 )}
             />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                 control={form.control}
                 name="phone"
@@ -122,6 +129,42 @@ export function PatientForm() {
                     <FormLabel>Date of Birth</FormLabel>
                     <FormControl>
                     <Input type="date" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+            </div>
+            <FormField
+                control={form.control}
+                name="gender"
+                render={({ field }) => (
+                    <FormItem>
+                    <FormLabel>Gender</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select a gender" />
+                        </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                            <SelectItem value="Male">Male</SelectItem>
+                            <SelectItem value="Female">Female</SelectItem>
+                            <SelectItem value="Other">Other</SelectItem>
+                        </SelectContent>
+                    </Select>
+                    <FormMessage />
+                    </FormItem>
+                )}
+                />
+            <FormField
+                control={form.control}
+                name="address"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Address</FormLabel>
+                    <FormControl>
+                    <Textarea placeholder="123 Main St, Anytown, USA" {...field} />
                     </FormControl>
                     <FormMessage />
                 </FormItem>
