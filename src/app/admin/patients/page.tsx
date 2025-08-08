@@ -1,5 +1,5 @@
 import { PageHeader } from '@/components/page-header';
-import { PatientManagement } from './components/patient-management';
+import PatientManagement from './components/patient-management';
 
 export default function PatientsPage() {
   return (
