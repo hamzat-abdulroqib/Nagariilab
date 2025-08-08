@@ -6,6 +6,8 @@ import {
   ClipboardList,
   LogOut,
   Settings,
+  Users,
+  DollarSign
 } from 'lucide-react';
 import {
   SidebarProvider,
@@ -35,6 +37,8 @@ import { Logo } from './logo';
 
 const navItems = [
   { href: '/technician/my-work', label: 'My Work', icon: ClipboardList },
+  { href: '/technician/add-patient', label: 'Add Patient', icon: Users },
+  { href: '/technician/payments', label: 'Payments', icon: DollarSign },
 ];
 
 function NavMenu() {

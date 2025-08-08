@@ -10,12 +10,20 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
-import { Users, FlaskConical, TestTube, ClipboardList } from 'lucide-react';
+import { Users, FlaskConical, TestTube, ClipboardList, DollarSign } from 'lucide-react';
 import type { ChartConfig } from '@/components/ui/chart';
 import { useData } from '@/context/data-context';
 import { format, subMonths } from 'date-fns';
@@ -28,11 +36,10 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function Dashboard() {
-    const { patients, labTests, technicians } = useData();
+    const { patients, labTests, technicians, payments } = useData();
 
     const pendingTests = labTests.filter(t => t.status === 'Pending').length;
     const completedTests = labTests.filter(t => t.status === 'Completed').length;
-    const testsInProgress = labTests.filter(t => t.status === 'In Progress').length;
 
     const monthlyTestCounts = React.useMemo(() => {
         const now = new Date();
@@ -62,13 +69,13 @@ export default function Dashboard() {
 
 
   return (
-    <div>
+    <div className="space-y-8">
       <PageHeader
         title="Admin Dashboard"
         description="An overview of your laboratory's activities."
       />
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard
           title="Total Patients"
           value={patients.length.toString()}
@@ -95,33 +102,64 @@ export default function Dashboard() {
         />
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Tests Overview</CardTitle>
-          <CardDescription>
-            A chart showing the number of tests conducted per month.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ChartContainer config={chartConfig} className="h-[300px] w-full">
-            <BarChart accessibilityLayer data={monthlyTestCounts}>
-              <CartesianGrid vertical={false} />
-              <XAxis
-                dataKey="month"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-                tickFormatter={(value) => value ? value.slice(0, 3) : ''}
-              />
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent indicator="dot" />}
-              />
-              <Bar dataKey="tests" fill="var(--color-tests)" radius={4} />
-            </BarChart>
-          </ChartContainer>
-        </CardContent>
-      </Card>
+      <div className="grid gap-8 md:grid-cols-2">
+         <Card>
+            <CardHeader>
+                <CardTitle>Recent Payments</CardTitle>
+                <CardDescription>
+                A list of the 5 most recent payments.
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Patient</TableHead>
+                            <TableHead>Date</TableHead>
+                            <TableHead className="text-right">Amount</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {payments.slice(0, 5).map((payment) => (
+                            <TableRow key={payment.id}>
+                                <TableCell>{payment.patientName}</TableCell>
+                                <TableCell>{new Date(payment.date).toLocaleDateString()}</TableCell>
+                                <TableCell className="text-right">${payment.amount.toFixed(2)}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </CardContent>
+        </Card>
+        <Card>
+            <CardHeader>
+            <CardTitle>Tests Overview</CardTitle>
+            <CardDescription>
+                A chart showing the number of tests conducted per month.
+            </CardDescription>
+            </CardHeader>
+            <CardContent>
+            <ChartContainer config={chartConfig} className="h-[300px] w-full">
+                <BarChart accessibilityLayer data={monthlyTestCounts}>
+                <CartesianGrid vertical={false} />
+                <XAxis
+                    dataKey="month"
+                    tickLine={false}
+                    tickMargin={10}
+                    axisLine={false}
+                    tickFormatter={(value) => value ? value.slice(0, 3) : ''}
+                />
+                <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent indicator="dot" />}
+                />
+                <Bar dataKey="tests" fill="var(--color-tests)" radius={4} />
+                </BarChart>
+            </ChartContainer>
+            </CardContent>
+        </Card>
+      </div>
+
     </div>
   );
 }

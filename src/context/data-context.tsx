@@ -1,17 +1,21 @@
 'use client';
 
 import * as React from 'react';
-import type { Patient, Technician, LabTest } from '@/lib/types';
-import { mockPatients, mockTechnicians, mockLabTests } from '@/lib/mock-data';
+import type { Patient, Technician, LabTest, Payment } from '@/lib/types';
+import { mockPatients, mockTechnicians, mockLabTests, mockPayments } from '@/lib/mock-data';
 
 type DataContextType = {
   patients: Patient[];
   technicians: Technician[];
   labTests: LabTest[];
+  payments: Payment[];
   addPatient: (patientData: Omit<Patient, 'id' | 'patientId'>) => void;
+  addTechnician: (technicianData: Omit<Technician, 'id'>) => void;
   addTest: (testData: { patientId: string; testName: string }) => void;
   assignTest: (testId: string, technicianId: string) => void;
   completeTest: (testId: string) => void;
+  updateTestResult: (testId: string, result: string) => void;
+  recordPayment: (paymentData: { patientId: string, amount: number }) => void;
 };
 
 const DataContext = React.createContext<DataContextType | undefined>(undefined);
@@ -20,6 +24,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const [patients, setPatients] = React.useState<Patient[]>(mockPatients);
   const [technicians, setTechnicians] = React.useState<Technician[]>(mockTechnicians);
   const [labTests, setLabTests] = React.useState<LabTest[]>(mockLabTests);
+  const [payments, setPayments] = React.useState<Payment[]>(mockPayments);
 
   const addPatient = (patientData: Omit<Patient, 'id' | 'patientId'>) => {
     setPatients(prev => {
@@ -32,6 +37,17 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         return [newPatient, ...prev];
     });
   };
+
+  const addTechnician = (technicianData: Omit<Technician, 'id'>) => {
+    setTechnicians(prev => {
+        const newId = (prev.length + 1).toString();
+        const newTechnician: Technician = {
+            id: newId,
+            ...technicianData,
+        };
+        return [newTechnician, ...prev];
+    });
+  }
 
   const addTest = (testData: { patientId: string; testName: string }) => {
     const patient = patients.find(p => p.id === testData.patientId);
@@ -67,11 +83,35 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     setLabTests(prev =>
       prev.map(test =>
         test.id === testId
-          ? { ...test, status: 'Completed', completedAt: new Date().toISOString(), result: 'Results pending review' }
+          ? { ...test, status: 'Completed', completedAt: new Date().toISOString() }
           : test
       )
     );
   };
+
+  const updateTestResult = (testId: string, result: string) => {
+    setLabTests(prev => 
+        prev.map(test => 
+            test.id === testId ? { ...test, result } : test
+        )
+    )
+  }
+
+  const recordPayment = (paymentData: { patientId: string, amount: number }) => {
+    const patient = patients.find(p => p.id === paymentData.patientId);
+    if (!patient) return;
+
+    setPayments(prev => {
+        const newPayment: Payment = {
+            id: (prev.length + 1).toString(),
+            patientId: paymentData.patientId,
+            patientName: patient.name,
+            amount: paymentData.amount,
+            date: new Date().toISOString(),
+        };
+        return [newPayment, ...prev];
+    });
+  }
 
   return (
     <DataContext.Provider
@@ -79,10 +119,14 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         patients,
         technicians,
         labTests,
+        payments,
         addPatient,
+        addTechnician,
         addTest,
         assignTest,
         completeTest,
+        updateTestResult,
+        recordPayment,
       }}
     >
       {children}

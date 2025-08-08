@@ -26,3 +26,11 @@ export interface LabTest {
   createdAt: string;
   completedAt: string | null;
 }
+
+export interface Payment {
+  id: string;
+  patientId: string;
+  patientName: string;
+  amount: number;
+  date: string;
+}

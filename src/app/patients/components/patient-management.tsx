@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import type { Patient } from '@/lib/types';
 import { PlusCircle, Search } from 'lucide-react';
 import {
   Dialog,
@@ -36,6 +35,7 @@ import {
 } from '@/components/ui/form';
 import { useData } from '@/context/data-context';
 import { useToast } from '@/hooks/use-toast';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 
 const addPatientSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -49,7 +49,6 @@ const addPatientSchema = z.object({
 export function PatientManagement() {
   const { toast } = useToast();
   const { patients, addPatient } = useData();
-  const [search, setSearch] = React.useState('');
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
   const form = useForm<z.infer<typeof addPatientSchema>>({
@@ -71,137 +70,75 @@ export function PatientManagement() {
     })
   };
 
-  const filteredPatients = patients.filter(
-    (patient) =>
-      patient.name.toLowerCase().includes(search.toLowerCase()) ||
-      patient.patientId.toLowerCase().includes(search.toLowerCase()) ||
-      patient.phone.includes(search)
-  );
-
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <div className="relative w-full max-w-sm">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search by name, ID, or phone..."
-            className="pl-8"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Add Patient
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Add New Patient</DialogTitle>
-              <DialogDescription>
-                Fill in the details below to add a new patient record.
-              </DialogDescription>
-            </DialogHeader>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+    <Card>
+      <CardHeader>
+        <CardTitle>Add New Patient</CardTitle>
+        <CardDescription>
+          Fill in the details below to add a new patient record.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Full Name</FormLabel>
+                    <FormControl>
+                    <Input placeholder="John Doe" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                    <Input placeholder="john.doe@example.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
                 <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Full Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="John Doe" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input placeholder="john.doe@example.com" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                 <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Phone Number</FormLabel>
-                      <FormControl>
-                        <Input placeholder="123-456-7890" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="dob"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Date of Birth</FormLabel>
-                      <FormControl>
-                        <Input type="date" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <DialogFooter>
-                  <DialogClose asChild>
-                    <Button type="button" variant="secondary">Cancel</Button>
-                  </DialogClose>
-                  <Button type="submit">Add Patient</Button>
-                </DialogFooter>
-              </form>
-            </Form>
-          </DialogContent>
-        </Dialog>
-      </div>
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Patient ID</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Date of Birth</TableHead>
-              <TableHead>Phone</TableHead>
-              <TableHead>Email</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredPatients.length > 0 ? (
-                filteredPatients.map((patient) => (
-                <TableRow key={patient.id}>
-                    <TableCell className="font-medium">{patient.patientId}</TableCell>
-                    <TableCell>{patient.name}</TableCell>
-                    <TableCell>{patient.dob}</TableCell>
-                    <TableCell>{patient.phone}</TableCell>
-                    <TableCell>{patient.email}</TableCell>
-                </TableRow>
-                ))
-            ) : (
-                <TableRow>
-                    <TableCell colSpan={5} className="h-24 text-center">
-                        No patients found.
-                    </TableCell>
-                </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-    </div>
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Phone Number</FormLabel>
+                    <FormControl>
+                    <Input placeholder="123-456-7890" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="dob"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Date of Birth</FormLabel>
+                    <FormControl>
+                    <Input type="date" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+            <div className="flex justify-end pt-4">
+                <Button type="submit">Add Patient</Button>
+            </div>
+            </form>
+        </Form>
+       </CardContent>
+    </Card>
   );
 }

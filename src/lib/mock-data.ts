@@ -1,4 +1,4 @@
-import type { Patient, Technician, LabTest } from './types';
+import type { Patient, Technician, LabTest, Payment } from './types';
 
 export const mockPatients: Patient[] = [
   { id: '1', patientId: 'NML-001', name: 'John Doe', dob: '1985-05-15', gender: 'Male', phone: '123-456-7890', email: 'john.doe@example.com', address: '123 Main St, Anytown' },
@@ -15,11 +15,16 @@ export const mockTechnicians: Technician[] = [
 ];
 
 export const mockLabTests: LabTest[] = [
-  { id: '1', patientId: '1', patientName: 'John Doe', testName: 'Complete Blood Count', status: 'Completed', result: 'Normal', assignedTechnicianId: '1', createdAt: '2023-10-26T10:00:00Z', completedAt: '2023-10-26T14:00:00Z' },
+  { id: '1', patientId: '1', patientName: 'John Doe', testName: 'Complete Blood Count', status: 'Completed', result: 'All values within normal range.', assignedTechnicianId: '1', createdAt: '2023-10-26T10:00:00Z', completedAt: '2023-10-26T14:00:00Z' },
   { id: '2', patientId: '2', patientName: 'Jane Smith', testName: 'Lipid Panel', status: 'In Progress', result: null, assignedTechnicianId: '3', createdAt: '2023-10-27T09:30:00Z', completedAt: null },
   { id: '3', patientId: '1', patientName: 'John Doe', testName: 'Urinalysis', status: 'Pending', result: null, assignedTechnicianId: null, createdAt: '2023-10-28T08:00:00Z', completedAt: null },
-  { id: '4', patientId: '3', patientName: 'Peter Jones', testName: 'Microbe Culture', status: 'Pending', result: null, assignedTechnicianId: null, createdAt: '2023-10-28T11:00:00Z', completedAt: null },
-  { id: '5', patientId: '4', patientName: 'Mary Johnson', testName: 'Thyroid Function Test', status: 'Completed', result: 'Within limits', assignedTechnicianId: '3', createdAt: '2023-10-25T15:00:00Z', completedAt: '2023-10-26T18:00:00Z' },
+  { id: '4', patientId: '3', patientName: 'Peter Jones', testName: 'Microbe Culture', status: 'In Progress', result: null, assignedTechnicianId: '2', createdAt: '2023-10-28T11:00:00Z', completedAt: null },
+  { id: '5', patientId: '4', patientName: 'Mary Johnson', testName: 'Thyroid Function Test', status: 'Completed', result: 'TSH level is slightly elevated.', assignedTechnicianId: '3', createdAt: '2023-10-25T15:00:00Z', completedAt: '2023-10-26T18:00:00Z' },
   { id: '6', patientId: '5', patientName: 'Carlos Garcia', testName: 'Glucose Tolerance Test', status: 'Pending', result: null, assignedTechnicianId: null, createdAt: '2023-10-29T10:15:00Z', completedAt: null },
   { id: '7', patientId: '2', patientName: 'Jane Smith', testName: 'Kidney Function Test', status: 'In Progress', result: null, assignedTechnicianId: '2', createdAt: '2023-10-29T11:45:00Z', completedAt: null },
 ];
+
+export const mockPayments: Payment[] = [
+    { id: '1', patientId: '1', patientName: 'John Doe', amount: 50.00, date: '2023-10-26T14:05:00Z'},
+    { id: '2', patientId: '4', patientName: 'Mary Johnson', amount: 75.50, date: '2023-10-26T18:10:00Z'},
+]

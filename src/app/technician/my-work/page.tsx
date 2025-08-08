@@ -18,14 +18,72 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogClose,
+} from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import { CheckCircle, Clock, FileText } from 'lucide-react';
+import { CheckCircle, Clock, FileText, Pencil } from 'lucide-react';
 import { StatCard } from '@/components/stat-card';
 import { useData } from '@/context/data-context';
 import { PageHeader } from '@/components/page-header';
 
 // For demonstration, we'll assume technician with ID '2' is logged in.
 const LOGGED_IN_TECHNICIAN_ID = '2';
+
+function RecordResultDialog({ testId, currentResult }: { testId: string, currentResult: string | null }) {
+    const { toast } = useToast();
+    const { updateTestResult, labTests } = useData();
+    const [result, setResult] = React.useState(currentResult || '');
+    const [isOpen, setIsOpen] = React.useState(false);
+
+    const handleSave = () => {
+        updateTestResult(testId, result);
+        const updatedTest = labTests.find(t => t.id === testId);
+        if (updatedTest) {
+            toast({
+                title: 'Result Recorded',
+                description: `Result for ${updatedTest.testName} has been saved.`,
+            });
+        }
+        setIsOpen(false);
+    }
+
+    return (
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
+                <Button size="sm" variant="outline">
+                    <Pencil className="mr-2 h-4 w-4" />
+                    {currentResult ? 'Edit Result' : 'Record Result'}
+                </Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Record Test Result</DialogTitle>
+                </DialogHeader>
+                <div className="py-4">
+                    <Textarea
+                        placeholder="Enter test results here..."
+                        className="h-40"
+                        value={result}
+                        onChange={(e) => setResult(e.target.value)}
+                    />
+                </div>
+                <DialogFooter>
+                    <DialogClose asChild><Button variant="ghost">Cancel</Button></DialogClose>
+                    <Button onClick={handleSave}>Save Result</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
 
 export default function MyWorkPage() {
   const { toast } = useToast();
@@ -124,11 +182,14 @@ export default function MyWorkPage() {
                             {test.status}
                         </Badge>
                       </TableCell>
-                       <TableCell className="text-right">
+                       <TableCell className="text-right space-x-2">
                         {test.status === 'In Progress' && (
                            <Button size="sm" onClick={() => handleCompleteTest(test.id)}>
                             Mark as Complete
                            </Button>
+                        )}
+                        {test.status === 'Completed' && (
+                            <RecordResultDialog testId={test.id} currentResult={test.result} />
                         )}
                       </TableCell>
                     </TableRow>
