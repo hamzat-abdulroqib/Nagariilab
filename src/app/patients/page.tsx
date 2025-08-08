@@ -6,7 +6,7 @@ export default function PatientsPage() {
     <>
       <PageHeader
         title="Patient Management"
-        description="Search, view, add, and update patient records."
+        description="Search, view, and add patient records."
       />
       <PatientManagement />
     </>

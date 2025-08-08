@@ -2,8 +2,6 @@
 
 import Link from 'next/link';
 import {
-  Users,
-  FlaskConical,
   LogOut,
   Settings,
   ClipboardList
@@ -38,22 +36,8 @@ export default function TechnicianLayout({
             <span className="sr-only">MediTrack Lite</span>
           </Link>
           <Link
-            href="/technician/dashboard"
-            className="text-foreground transition-colors hover:text-foreground flex items-center gap-2"
-          >
-            <FlaskConical className="h-4 w-4" />
-            Test Management
-          </Link>
-          <Link
-            href="/technician/patients"
-            className="text-muted-foreground transition-colors hover:text-foreground flex items-center gap-2"
-          >
-             <Users className="h-4 w-4" />
-            Patient Management
-          </Link>
-           <Link
             href="/technician/my-work"
-            className="text-muted-foreground transition-colors hover:text-foreground flex items-center gap-2"
+            className="text-foreground transition-colors hover:text-foreground flex items-center gap-2"
           >
              <ClipboardList className="h-4 w-4" />
             My Work

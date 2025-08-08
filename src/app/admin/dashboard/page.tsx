@@ -15,10 +15,10 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart';
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
-import { Users, FlaskConical, TestTube, DollarSign } from 'lucide-react';
+import { Users, FlaskConical, TestTube, ClipboardList } from 'lucide-react';
 import type { ChartConfig } from '@/components/ui/chart';
 import { useData } from '@/context/data-context';
-import { format, subMonths, getMonth } from 'date-fns';
+import { format, subMonths } from 'date-fns';
 
 const chartConfig = {
   tests: {
@@ -28,11 +28,11 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function Dashboard() {
-    const { patients, labTests } = useData();
+    const { patients, labTests, technicians } = useData();
 
-    const testsInProgress = labTests.filter(t => t.status === 'In Progress').length;
-    const completedTests = labTests.filter(t => t.status === 'Completed').length;
     const pendingTests = labTests.filter(t => t.status === 'Pending').length;
+    const completedTests = labTests.filter(t => t.status === 'Completed').length;
+    const testsInProgress = labTests.filter(t => t.status === 'In Progress').length;
 
     const monthlyTestCounts = React.useMemo(() => {
         const now = new Date();
@@ -76,22 +76,22 @@ export default function Dashboard() {
           description="Total registered patients"
         />
         <StatCard
+          title="Total Technicians"
+          value={technicians.length.toString()}
+          icon={<ClipboardList className="h-4 w-4 text-muted-foreground" />}
+          description="Total registered technicians"
+        />
+        <StatCard
           title="Tests to Assign"
           value={pendingTests.toString()}
           icon={<FlaskConical className="h-4 w-4 text-muted-foreground" />}
-          description="Tests awaiting technician assignment"
+          description="Tests awaiting assignment"
         />
         <StatCard
           title="Completed Tests"
           value={completedTests.toString()}
           icon={<TestTube className="h-4 w-4 text-muted-foreground" />}
           description="Total tests completed"
-        />
-        <StatCard
-          title="Tests In Progress"
-          value={testsInProgress.toString()}
-          icon={<DollarSign className="h-4 w-4 text-muted-foreground" />}
-          description="Tests currently being processed"
         />
       </div>
 

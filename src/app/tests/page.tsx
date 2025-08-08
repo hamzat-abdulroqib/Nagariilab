@@ -6,7 +6,7 @@ export default function TestsPage() {
     <>
       <PageHeader
         title="Test Management"
-        description="Log new tests, record results, and view patient test history."
+        description="Log new tests and view the status of all tests."
       />
       <TestManagement />
     </>

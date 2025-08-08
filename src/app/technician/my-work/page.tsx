@@ -38,7 +38,7 @@ export default function MyWorkPage() {
   );
 
   const pendingTests = assignedTests.filter(t => t.status === 'In Progress');
-  const completedTests = assignedTests.filter(t => t.status === 'Completed');
+  const completedTestsByMe = assignedTests.filter(t => t.status === 'Completed');
 
   const handleCompleteTest = (testId: string) => {
     completeTest(testId);
@@ -47,6 +47,7 @@ export default function MyWorkPage() {
         toast({
             title: 'Test Marked as Complete',
             description: `${completedTest.testName} for ${completedTest.patientName} is now complete.`,
+            variant: 'default',
         });
      }
   };
@@ -63,20 +64,20 @@ export default function MyWorkPage() {
       />
       <div className="grid gap-4 md:grid-cols-3">
           <StatCard 
-            title="Assigned Tests"
+            title="Total Assigned Tests"
             value={assignedTests.length.toString()}
             icon={<FileText className="h-4 w-4 text-muted-foreground" />}
-            description="Total tests assigned to you."
+            description="All tests assigned to you."
           />
           <StatCard 
-            title="Pending Completion"
+            title="Tests In Progress"
             value={pendingTests.length.toString()}
             icon={<Clock className="h-4 w-4 text-muted-foreground" />}
-            description="Tests currently in progress."
+            description="Tests you need to complete."
           />
           <StatCard 
-            title="Completed by You"
-            value={completedTests.length.toString()}
+            title="My Completed Tests"
+            value={completedTestsByMe.length.toString()}
             icon={<CheckCircle className="h-4 w-4 text-muted-foreground" />}
             description="Total tests you have completed."
           />
@@ -85,7 +86,7 @@ export default function MyWorkPage() {
         <CardHeader>
           <CardTitle>My Assigned Tests</CardTitle>
           <CardDescription>
-            These are the tests currently assigned to you.
+            These are the tests currently assigned to you. Update their status once completed.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -95,7 +96,7 @@ export default function MyWorkPage() {
                 <TableRow>
                   <TableHead>Test Name</TableHead>
                   <TableHead>Patient</TableHead>
-                  <TableHead>Date Logged</TableHead>
+                  <TableHead>Date Assigned</TableHead>
                   <TableHead>Status</TableHead>
                    <TableHead className="text-right">Action</TableHead>
                 </TableRow>

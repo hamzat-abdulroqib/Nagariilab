@@ -10,7 +10,8 @@ import {
   LayoutDashboard,
   Users,
   LogOut,
-  Settings
+  Settings,
+  FileText
 } from 'lucide-react';
 import {
   SidebarProvider,
@@ -43,11 +44,11 @@ const navItems = [
   { href: '/admin/patients', label: 'Patients', icon: Users },
   { href: '/admin/tests', label: 'Tests', icon: FlaskConical },
   { href: '/admin/technicians', label: 'Technicians', icon: Clipboard },
+  { href: '/admin/assignments', label: 'Assignments', icon: FileText },
   { href: '/admin/ai-insights', label: 'AI Insights', icon: BrainCircuit },
 ];
 
 function NavMenu() {
-    const pathname = usePathname();
     const { state: sidebarState } = useSidebar();
   
     return (
@@ -125,7 +126,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   <Settings className="mr-2 h-4 w-4" />
                   <span>Settings</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>Support</DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <Link href="/login" className="flex items-center">

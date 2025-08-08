@@ -1,14 +1,5 @@
-import { PageHeader } from '@/components/page-header';
-import { TestManagement } from '@/app/tests/components/test-management';
+import MyWorkPage from '../my-work/page';
 
 export default function TechnicianDashboard() {
-  return (
-    <>
-      <PageHeader
-        title="Test Management"
-        description="Log new tests, record results, and view patient test history."
-      />
-      <TestManagement />
-    </>
-  );
+  return <MyWorkPage />;
 }

@@ -1,14 +1,14 @@
 import { PageHeader } from '@/components/page-header';
-import AssignmentManagement from './components/assignment-management';
+import TechnicianManagement from './components/technician-management';
 
 export default function TechniciansPage() {
   return (
     <>
       <PageHeader
         title="Technician Management"
-        description="Assign tests to technicians and track completed work."
+        description="View all registered technicians."
       />
-      <AssignmentManagement />
+      <TechnicianManagement />
     </>
   );
 }
