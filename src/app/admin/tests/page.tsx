@@ -1,5 +1,5 @@
 import { PageHeader } from '@/components/page-header';
-import { TestManagement } from './components/test-management';
+import { TestManagement } from '@/app/tests/components/test-management';
 
 export default function TestsPage() {
   return (
