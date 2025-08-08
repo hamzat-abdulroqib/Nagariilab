@@ -9,6 +9,7 @@ import {
   FlaskConical,
   LayoutDashboard,
   Users,
+  LogOut,
 } from 'lucide-react';
 import {
   SidebarProvider,
@@ -21,6 +22,7 @@ import {
   SidebarInset,
   SidebarTrigger,
   useSidebar,
+  SidebarFooter,
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import {
@@ -36,11 +38,11 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Logo } from './logo';
 
 const navItems = [
-  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/patients', label: 'Patients', icon: Users },
-  { href: '/tests', label: 'Tests', icon: FlaskConical },
-  { href: '/technicians', label: 'Technicians', icon: Clipboard },
-  { href: '/ai-insights', label: 'AI Insights', icon: BrainCircuit },
+  { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/admin/patients', label: 'Patients', icon: Users },
+  { href: '/admin/tests', label: 'Tests', icon: FlaskConical },
+  { href: '/admin/technicians', label: 'Technicians', icon: Clipboard },
+  { href: '/admin/ai-insights', label: 'AI Insights', icon: BrainCircuit },
 ];
 
 function NavMenu() {
@@ -50,17 +52,18 @@ function NavMenu() {
     return (
       <SidebarMenu>
         {navItems.map((item) => {
-          const button = (
-             <SidebarMenuButton
-              asChild
-              isActive={pathname === item.href}
-            >
-              <Link href={item.href}>
-                <item.icon />
-                <span>{item.label}</span>
-              </Link>
-            </SidebarMenuButton>
-          );
+            const button = (
+                <SidebarMenuButton
+                    asChild
+                    isActive={pathname === item.href}
+                >
+                    <Link href={item.href}>
+                        <item.icon />
+                        <span>{item.label}</span>
+                    </Link>
+                </SidebarMenuButton>
+            );
+
           return (
             <SidebarMenuItem key={item.href}>
                {sidebarState === 'collapsed' ? (
@@ -90,6 +93,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <SidebarContent>
             <NavMenu />
         </SidebarContent>
+        <SidebarFooter>
+          <SidebarMenu>
+             <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                    <Link href="/login">
+                        <LogOut />
+                        <span>Logout</span>
+                    </Link>
+                </SidebarMenuButton>
+             </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
       </Sidebar>
       <SidebarInset>
         <header className="flex h-14 items-center gap-4 border-b bg-background/95 backdrop-blur-sm px-4 lg:h-[60px] lg:px-6 sticky top-0 z-30">
@@ -111,7 +126,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 <DropdownMenuItem>Settings</DropdownMenuItem>
                 <DropdownMenuItem>Support</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Logout</DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/login">Logout</Link>
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
         </header>
