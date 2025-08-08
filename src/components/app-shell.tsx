@@ -10,6 +10,7 @@ import {
   LayoutDashboard,
   Users,
   LogOut,
+  Settings
 } from 'lucide-react';
 import {
   SidebarProvider,
@@ -53,29 +54,26 @@ function NavMenu() {
       <SidebarMenu>
         {navItems.map((item) => {
             const button = (
-                <SidebarMenuButton
-                    asChild
-                    isActive={pathname === item.href}
-                >
-                    <Link href={item.href}>
-                        <item.icon />
-                        <span>{item.label}</span>
-                    </Link>
+                 <SidebarMenuButton>
+                    <item.icon />
+                    <span>{item.label}</span>
                 </SidebarMenuButton>
             );
 
           return (
             <SidebarMenuItem key={item.href}>
-               {sidebarState === 'collapsed' ? (
-                <Tooltip>
-                  <TooltipTrigger asChild>{button}</TooltipTrigger>
-                  <TooltipContent side="right" align="center">
-                    {item.label}
-                  </TooltipContent>
-                </Tooltip>
-              ) : (
-                button
-              )}
+               <Link href={item.href}>
+                 {sidebarState === 'collapsed' ? (
+                  <Tooltip>
+                    <TooltipTrigger asChild>{button}</TooltipTrigger>
+                    <TooltipContent side="right" align="center">
+                      {item.label}
+                    </TooltipContent>
+                  </Tooltip>
+                ) : (
+                  button
+                )}
+               </Link>
             </SidebarMenuItem>
           );
         })}
@@ -123,11 +121,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Admin Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Settings</DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Settings</span>
+                </DropdownMenuItem>
                 <DropdownMenuItem>Support</DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link href="/login">Logout</Link>
+                  <Link href="/login" className="flex items-center">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Logout</span>
+                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

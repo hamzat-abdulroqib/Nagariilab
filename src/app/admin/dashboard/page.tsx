@@ -32,6 +32,7 @@ export default function Dashboard() {
 
     const testsInProgress = labTests.filter(t => t.status === 'In Progress').length;
     const completedTests = labTests.filter(t => t.status === 'Completed').length;
+    const pendingTests = labTests.filter(t => t.status === 'Pending').length;
 
     const monthlyTestCounts = React.useMemo(() => {
         const now = new Date();
@@ -44,11 +45,15 @@ export default function Dashboard() {
         });
     
         labTests.forEach(test => {
-          const monthIndex = getMonth(new Date(test.createdAt));
-          const monthName = format(new Date(test.createdAt), 'MMMM');
-          const countEntry = counts.find(c => c.month === monthName);
-          if (countEntry) {
-            countEntry.tests += 1;
+          try {
+            const testDate = new Date(test.createdAt);
+            const monthName = format(testDate, 'MMMM');
+            const countEntry = counts.find(c => c.month === monthName);
+            if (countEntry) {
+              countEntry.tests += 1;
+            }
+          } catch (e) {
+             // Invalid date, skip
           }
         });
     
@@ -71,10 +76,10 @@ export default function Dashboard() {
           description="Total registered patients"
         />
         <StatCard
-          title="Tests In Progress"
-          value={testsInProgress.toString()}
+          title="Tests to Assign"
+          value={pendingTests.toString()}
           icon={<FlaskConical className="h-4 w-4 text-muted-foreground" />}
-          description="Tests currently being processed"
+          description="Tests awaiting technician assignment"
         />
         <StatCard
           title="Completed Tests"
@@ -83,10 +88,10 @@ export default function Dashboard() {
           description="Total tests completed"
         />
         <StatCard
-          title="Revenue (This Month)"
-          value="$0"
+          title="Tests In Progress"
+          value={testsInProgress.toString()}
           icon={<DollarSign className="h-4 w-4 text-muted-foreground" />}
-          description="Not implemented yet"
+          description="Tests currently being processed"
         />
       </div>
 
@@ -106,7 +111,7 @@ export default function Dashboard() {
                 tickLine={false}
                 tickMargin={10}
                 axisLine={false}
-                tickFormatter={(value) => value.slice(0, 3)}
+                tickFormatter={(value) => value ? value.slice(0, 3) : ''}
               />
               <ChartTooltip
                 cursor={false}

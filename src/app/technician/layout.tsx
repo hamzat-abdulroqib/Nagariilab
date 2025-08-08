@@ -2,8 +2,11 @@
 
 import Link from 'next/link';
 import {
+  Users,
   FlaskConical,
   LogOut,
+  Settings,
+  ClipboardList
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -36,9 +39,24 @@ export default function TechnicianLayout({
           </Link>
           <Link
             href="/technician/dashboard"
-            className="text-foreground transition-colors hover:text-foreground"
+            className="text-foreground transition-colors hover:text-foreground flex items-center gap-2"
           >
-            Dashboard
+            <FlaskConical className="h-4 w-4" />
+            Test Management
+          </Link>
+          <Link
+            href="/technician/patients"
+            className="text-muted-foreground transition-colors hover:text-foreground flex items-center gap-2"
+          >
+             <Users className="h-4 w-4" />
+            Patient Management
+          </Link>
+           <Link
+            href="/technician/my-work"
+            className="text-muted-foreground transition-colors hover:text-foreground flex items-center gap-2"
+          >
+             <ClipboardList className="h-4 w-4" />
+            My Work
           </Link>
         </nav>
         <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
@@ -56,11 +74,16 @@ export default function TechnicianLayout({
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Technician Account</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Settings</DropdownMenuItem>
-                    <DropdownMenuItem>Support</DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Settings className='mr-2 h-4 w-4' />
+                      Settings
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
-                       <Link href="/login">Logout</Link>
+                       <Link href="/login" className='flex items-center'>
+                        <LogOut className='mr-2 h-4 w-4' />
+                        Logout
+                       </Link>
                     </DropdownMenuItem>
                 </DropdownMenuContent>
                 </DropdownMenu>
