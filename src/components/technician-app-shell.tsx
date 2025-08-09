@@ -3,12 +3,10 @@
 import * as React from 'react';
 import Link from 'next/link';
 import {
-  ClipboardList,
   LogOut,
   Settings,
   Users,
   DollarSign,
-  FlaskConical,
   FilePenLine
 } from 'lucide-react';
 import {
