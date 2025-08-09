@@ -41,7 +41,8 @@ export default function TestsPage() {
                 </TableRow>
                 </TableHeader>
                 <TableBody>
-                {labTests.map((test) => (
+                {labTests.length > 0 ? (
+                    labTests.map((test) => (
                     <TableRow key={test.id}>
                     <TableCell className="font-medium">{test.testName}</TableCell>
                     <TableCell>{test.patientName}</TableCell>
@@ -64,7 +65,14 @@ export default function TestsPage() {
                     </TableCell>
                     <TableCell>{test.result || 'N/A'}</TableCell>
                     </TableRow>
-                ))}
+                ))
+                ) : (
+                <TableRow>
+                    <TableCell colSpan={5} className="h-24 text-center">
+                        No tests found.
+                    </TableCell>
+                </TableRow>
+                )}
                 </TableBody>
             </Table>
             </div>
