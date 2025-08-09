@@ -7,7 +7,8 @@ import {
   LogOut,
   Settings,
   Users,
-  DollarSign
+  DollarSign,
+  FlaskConical
 } from 'lucide-react';
 import {
   SidebarProvider,
@@ -38,6 +39,7 @@ import { Logo } from './logo';
 const navItems = [
   { href: '/technician/my-work', label: 'My Work', icon: ClipboardList },
   { href: '/technician/add-patient', label: 'Add Patient', icon: Users },
+  { href: '/technician/log-test', label: 'Log Test', icon: FlaskConical },
   { href: '/technician/payments', label: 'Payments', icon: DollarSign },
 ];
 
