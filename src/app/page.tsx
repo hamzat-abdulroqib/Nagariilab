@@ -1,20 +1,27 @@
+
+'use client';
+
 import Link from 'next/link';
+import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { TestTube, FlaskConical, Users, ShieldCheck, ArrowRight, Star } from 'lucide-react';
+import { TestTube, FlaskConical, Users, ShieldCheck, ArrowRight, Star, Menu } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
 
 
 export default function LandingPage() {
+  const [isSheetOpen, setIsSheetOpen] = React.useState(false);
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <header className="px-4 lg:px-6 h-14 flex items-center border-b sticky top-0 bg-background/95 backdrop-blur-sm z-50">
+       <header className="px-4 lg:px-6 h-14 flex items-center border-b sticky top-0 bg-background/95 backdrop-blur-sm z-50">
         <Link href="#" className="flex items-center justify-center" prefetch={false}>
           <Logo />
         </Link>
-        <nav className="ml-auto flex items-center gap-4 sm:gap-6">
+        <nav className="ml-auto hidden md:flex items-center gap-4 sm:gap-6">
           <Link
             href="#features"
             className="text-sm font-medium hover:underline underline-offset-4"
@@ -40,6 +47,58 @@ export default function LandingPage() {
             <Link href="/signup">Get Started</Link>
           </Button>
         </nav>
+        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="icon" className="ml-auto md:hidden">
+              <Menu className="h-6 w-6" />
+              <span className="sr-only">Toggle navigation menu</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="right">
+            <div className="grid gap-4 py-6">
+               <SheetClose asChild>
+                <Link href="#" className="flex items-center justify-center mb-4" prefetch={false}>
+                    <Logo />
+                </Link>
+               </SheetClose>
+               <SheetClose asChild>
+                <Link
+                    href="#features"
+                    className="text-lg font-medium hover:underline underline-offset-4"
+                    prefetch={false}
+                    onClick={() => setIsSheetOpen(false)}
+                >
+                    Features
+                </Link>
+              </SheetClose>
+              <SheetClose asChild>
+                <Link
+                    href="#how-it-works"
+                    className="text-lg font-medium hover:underline underline-offset-4"
+                    prefetch={false}
+                    onClick={() => setIsSheetOpen(false)}
+                >
+                    How It Works
+                </Link>
+              </SheetClose>
+              <SheetClose asChild>
+                <Link
+                    href="/login"
+                    className="text-lg font-medium hover:underline underline-offset-4"
+                    prefetch={false}
+                    onClick={() => setIsSheetOpen(false)}
+                >
+                    Login
+                </Link>
+               </SheetClose>
+               <SheetClose asChild>
+                <Button asChild className="mt-4">
+                    <Link href="/signup">Get Started</Link>
+                </Button>
+               </SheetClose>
+            </div>
+          </SheetContent>
+        </Sheet>
       </header>
       <main className="flex-1">
         <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-primary/10">
