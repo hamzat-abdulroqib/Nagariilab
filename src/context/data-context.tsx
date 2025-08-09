@@ -22,7 +22,6 @@ type DataContextType = {
   removeTechnician: (technicianId: string) => void;
   addTest: (testData: { patientId: string; testName: string }) => void;
   assignTest: (testId: string, technicianId: string) => void;
-  completeTest: (testId: string) => void;
   updateTestResult: (testId: string, result: string) => void;
   recordPayment: (paymentData: { patientId: string, amount: number }) => void;
 };
@@ -146,20 +145,10 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
-  const completeTest = (testId: string) => {
-    setLabTests(prev =>
-      prev.map(test =>
-        test.id === testId
-          ? { ...test, status: 'Completed', completedAt: new Date().toISOString() }
-          : test
-      )
-    );
-  };
-
   const updateTestResult = (testId: string, result: string) => {
     setLabTests(prev => 
         prev.map(test => 
-            test.id === testId ? { ...test, result } : test
+            test.id === testId ? { ...test, result, status: 'Completed', completedAt: new Date().toISOString() } : test
         )
     )
   }
@@ -196,7 +185,6 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         removeTechnician,
         addTest,
         assignTest,
-        completeTest,
         updateTestResult,
         recordPayment,
       }}

@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -44,22 +45,31 @@ function RecordResultDialog({ testId, currentResult, onResultSaved }: { testId: 
     const [isOpen, setIsOpen] = React.useState(false);
 
     const handleSave = () => {
+        if (!result.trim()) {
+            toast({
+                title: 'Result Required',
+                description: `Please enter a result before saving.`,
+                variant: 'destructive',
+            });
+            return;
+        }
         updateTestResult(testId, result);
         const updatedTest = labTests.find(t => t.id === testId);
         if (updatedTest) {
             toast({
                 title: 'Result Recorded',
-                description: `Result for ${updatedTest.testName} has been saved.`,
+                description: `Result for ${updatedTest.testName} has been saved and the test is marked as complete.`,
             });
         }
         setIsOpen(false);
         onResultSaved();
     }
     
-    // Update local state if the prop changes
     React.useEffect(() => {
-        setResult(currentResult || '');
-    }, [currentResult]);
+        if (isOpen) {
+            setResult(currentResult || '');
+        }
+    }, [isOpen, currentResult]);
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -83,7 +93,7 @@ function RecordResultDialog({ testId, currentResult, onResultSaved }: { testId: 
                 </div>
                 <DialogFooter>
                     <DialogClose asChild><Button variant="ghost">Cancel</Button></DialogClose>
-                    <Button onClick={handleSave}>Save Result</Button>
+                    <Button onClick={handleSave}>Save Result & Complete</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
@@ -92,8 +102,7 @@ function RecordResultDialog({ testId, currentResult, onResultSaved }: { testId: 
 
 
 export default function MyWorkPage() {
-  const { toast } = useToast();
-  const { labTests, technicians, completeTest } = useData();
+  const { labTests, technicians } = useData();
   // Force re-render when a result is saved
   const [_, setForceRender] = React.useState({});
   
@@ -105,18 +114,6 @@ export default function MyWorkPage() {
 
   const pendingTests = assignedTests.filter(t => t.status === 'In Progress');
   const completedTestsByMe = assignedTests.filter(t => t.status === 'Completed');
-
-  const handleCompleteTest = (testId: string) => {
-    completeTest(testId);
-     const completedTest = labTests.find(t => t.id === testId);
-     if (completedTest) {
-        toast({
-            title: 'Test Marked as Complete',
-            description: `${completedTest.testName} for ${completedTest.patientName} is now complete.`,
-            variant: 'default',
-        });
-     }
-  };
 
   if (!technician) {
     return <div>Technician not found.</div>;
@@ -189,12 +186,7 @@ export default function MyWorkPage() {
                         </Badge>
                       </TableCell>
                        <TableCell className="text-right space-x-2">
-                        {test.status === 'In Progress' && (
-                           <Button size="sm" onClick={() => handleCompleteTest(test.id)}>
-                            Mark as Complete
-                           </Button>
-                        )}
-                        {test.status === 'Completed' && (
+                        {test.status !== 'Pending' && (
                             <RecordResultDialog 
                                 testId={test.id} 
                                 currentResult={test.result}
