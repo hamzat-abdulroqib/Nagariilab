@@ -93,7 +93,7 @@ export default function TechnicianManagement() {
 
   return (
     <Card>
-      <CardHeader className="flex flex-row justify-between items-center">
+      <CardHeader className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
             <CardTitle>All Technicians</CardTitle>
             <CardDescription>
@@ -180,7 +180,7 @@ export default function TechnicianManagement() {
         </Dialog>
       </CardHeader>
       <CardContent>
-        <div className="rounded-md border">
+        <div className="rounded-md border overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>

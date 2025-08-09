@@ -128,7 +128,7 @@ export function TestManagement() {
       </div>
       <div className="md:col-span-2">
         <h2 className="text-2xl font-bold mb-4">All Tests</h2>
-        <div className="rounded-md border">
+        <div className="rounded-md border overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>

@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useData } from '@/context/data-context';
 
 export function AssignmentManagement() {
@@ -42,16 +42,17 @@ export function AssignmentManagement() {
     <Card>
       <CardHeader>
         <CardTitle>Unassigned Tests</CardTitle>
+        <CardDescription>Assign pending tests to available technicians.</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="rounded-md border">
+        <div className="rounded-md border overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Test Name</TableHead>
                 <TableHead>Patient</TableHead>
                 <TableHead>Date Logged</TableHead>
-                <TableHead className="w-[250px]">Assign To</TableHead>
+                <TableHead className="w-[200px] md:w-[250px]">Assign To</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

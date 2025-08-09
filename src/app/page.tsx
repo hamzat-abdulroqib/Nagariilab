@@ -139,22 +139,29 @@ export default function LandingPage() {
               </div>
             </div>
             <div className="relative mt-12">
-                <div className="absolute top-1/2 left-0 w-full h-0.5 bg-border -translate-y-1/2" aria-hidden="true"></div>
-                <div className="relative grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div className="flex flex-col items-center text-center gap-4 p-6 bg-background rounded-lg shadow-md">
-                        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-primary-foreground font-bold text-xl">1</div>
-                        <h3 className="text-xl font-bold">Register Patient & Test</h3>
-                        <p className="text-muted-foreground text-sm">Technicians or admins quickly add new patients and log required lab tests into the system, kicking off the process.</p>
+                <div className="absolute top-0 left-1/2 w-0.5 h-full bg-border -translate-x-1/2 md:hidden" aria-hidden="true"></div>
+                <div className="absolute top-1/2 left-0 w-full h-0.5 bg-border -translate-y-1/2 hidden md:block" aria-hidden="true"></div>
+                <div className="relative grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4">
+                    <div className="flex flex-col md:flex-row md:items-center text-center md:text-left gap-4 p-6 bg-background rounded-lg shadow-md">
+                        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-primary-foreground font-bold text-xl mx-auto md:mx-0 flex-shrink-0">1</div>
+                        <div>
+                            <h3 className="text-xl font-bold">Register Patient & Test</h3>
+                            <p className="text-muted-foreground text-sm mt-1">Technicians or admins quickly add new patients and log required lab tests into the system, kicking off the process.</p>
+                        </div>
                     </div>
-                    <div className="flex flex-col items-center text-center gap-4 p-6 bg-background rounded-lg shadow-md">
-                        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-primary-foreground font-bold text-xl">2</div>
-                        <h3 className="text-xl font-bold">Assign & Process</h3>
-                        <p className="text-muted-foreground text-sm">Admins assign the pending tests to available technicians. Technicians view their queue, perform the tests, and update the results.</p>
+                    <div className="flex flex-col md:flex-row md:items-center text-center md:text-left gap-4 p-6 bg-background rounded-lg shadow-md">
+                        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-primary-foreground font-bold text-xl mx-auto md:mx-0 flex-shrink-0">2</div>
+                        <div>
+                          <h3 className="text-xl font-bold">Assign & Process</h3>
+                          <p className="text-muted-foreground text-sm mt-1">Admins assign the pending tests to available technicians. Technicians view their queue, perform the tests, and update the results.</p>
+                        </div>
                     </div>
-                    <div className="flex flex-col items-center text-center gap-4 p-6 bg-background rounded-lg shadow-md">
-                        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-primary-foreground font-bold text-xl">3</div>
-                        <h3 className="text-xl font-bold">Review & Deliver</h3>
-                        <p className="text-muted-foreground text-sm">Once results are recorded, they are available for review. Admins can monitor overall progress and ensure timely delivery of results.</p>
+                    <div className="flex flex-col md:flex-row md:items-center text-center md:text-left gap-4 p-6 bg-background rounded-lg shadow-md">
+                        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-primary-foreground font-bold text-xl mx-auto md:mx-0 flex-shrink-0">3</div>
+                        <div>
+                          <h3 className="text-xl font-bold">Review & Deliver</h3>
+                          <p className="text-muted-foreground text-sm mt-1">Once results are recorded, they are available for review. Admins can monitor overall progress and ensure timely delivery of results.</p>
+                        </div>
                     </div>
                 </div>
             </div>

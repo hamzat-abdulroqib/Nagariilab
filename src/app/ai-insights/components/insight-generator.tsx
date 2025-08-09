@@ -38,7 +38,7 @@ export function InsightGenerator() {
         <CardContent className="space-y-4">
           <Textarea
             placeholder="Enter lab report data here..."
-            className="h-64 resize-none"
+            className="h-64 md:h-96 resize-none"
             value={reportData}
             onChange={(e) => setReportData(e.target.value)}
           />
@@ -53,7 +53,7 @@ export function InsightGenerator() {
           <CardTitle>AI-Generated Insights</CardTitle>
           <CardDescription>Potential trends or areas of concern.</CardDescription>
         </CardHeader>
-        <CardContent className="h-64">
+        <CardContent className="h-64 md:h-96">
           {isLoading ? (
             <div className="space-y-2">
               <Skeleton className="h-4 w-full" />

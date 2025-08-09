@@ -102,8 +102,8 @@ export default function Dashboard() {
         />
       </div>
 
-      <div className="grid gap-8 md:grid-cols-2">
-         <Card>
+      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+         <Card className="lg:col-span-1">
             <CardHeader>
                 <CardTitle>Recent Payments</CardTitle>
                 <CardDescription>
@@ -111,27 +111,29 @@ export default function Dashboard() {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Patient</TableHead>
-                            <TableHead>Date</TableHead>
-                            <TableHead className="text-right">Amount</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {payments.slice(0, 5).map((payment) => (
-                            <TableRow key={payment.id}>
-                                <TableCell>{payment.patientName}</TableCell>
-                                <TableCell>{new Date(payment.date).toLocaleDateString()}</TableCell>
-                                <TableCell className="text-right">${payment.amount.toFixed(2)}</TableCell>
+                <div className="overflow-x-auto">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Patient</TableHead>
+                                <TableHead>Date</TableHead>
+                                <TableHead className="text-right">Amount</TableHead>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                        </TableHeader>
+                        <TableBody>
+                            {payments.slice(0, 5).map((payment) => (
+                                <TableRow key={payment.id}>
+                                    <TableCell>{payment.patientName}</TableCell>
+                                    <TableCell>{new Date(payment.date).toLocaleDateString()}</TableCell>
+                                    <TableCell className="text-right">${payment.amount.toFixed(2)}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
             </CardContent>
         </Card>
-        <Card>
+        <Card className="lg:col-span-2">
             <CardHeader>
             <CardTitle>Tests Overview</CardTitle>
             <CardDescription>
