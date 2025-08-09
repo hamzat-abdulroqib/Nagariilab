@@ -68,7 +68,7 @@ export default function LandingPage() {
                 </div>
               </div>
               <Image
-                src="https://storage.googleapis.com/aif-studiobot-images/34f9a022-c43d-4c31-90a4-cb4a0553759c.png"
+                src="https://i.ibb.co/4RqZkgNV/hotspital.jpg"
                 width="600"
                 height="400"
                 alt="Hero"
