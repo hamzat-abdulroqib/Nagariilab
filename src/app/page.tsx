@@ -1,13 +1,16 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { TestTube, FlaskConical, Users, ShieldCheck } from 'lucide-react';
+import { TestTube, FlaskConical, Users, ShieldCheck, ArrowRight, Star } from 'lucide-react';
 import { Logo } from '@/components/logo';
+import Image from 'next/image';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+
 
 export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <header className="px-4 lg:px-6 h-14 flex items-center border-b">
+      <header className="px-4 lg:px-6 h-14 flex items-center border-b sticky top-0 bg-background/95 backdrop-blur-sm z-50">
         <Link href="#" className="flex items-center justify-center" prefetch={false}>
           <Logo />
         </Link>
@@ -18,6 +21,13 @@ export default function LandingPage() {
             prefetch={false}
           >
             Features
+          </Link>
+           <Link
+            href="#how-it-works"
+            className="text-sm font-medium hover:underline underline-offset-4"
+            prefetch={false}
+          >
+            How It Works
           </Link>
           <Link
             href="/login"
@@ -57,7 +67,7 @@ export default function LandingPage() {
                   </Button>
                 </div>
               </div>
-              <img
+              <Image
                 src="https://storage.googleapis.com/aif-studiobot-images/34f9a022-c43d-4c31-90a4-cb4a0553759c.png"
                 width="600"
                 height="400"
@@ -116,6 +126,150 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
+
+        <section id="how-it-works" className="w-full py-12 md:py-24 lg:py-32 bg-secondary/50">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <div className="inline-block rounded-lg bg-background px-3 py-1 text-sm">How It Works</div>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">A Simple, Powerful Process</h2>
+                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  Follow our intuitive workflow to manage your lab with unparalleled efficiency.
+                </p>
+              </div>
+            </div>
+            <div className="relative mt-12">
+                <div className="absolute top-1/2 left-0 w-full h-0.5 bg-border -translate-y-1/2" aria-hidden="true"></div>
+                <div className="relative grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="flex flex-col items-center text-center gap-4 p-6 bg-background rounded-lg shadow-md">
+                        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-primary-foreground font-bold text-xl">1</div>
+                        <h3 className="text-xl font-bold">Register Patient & Test</h3>
+                        <p className="text-muted-foreground text-sm">Technicians or admins quickly add new patients and log required lab tests into the system, kicking off the process.</p>
+                    </div>
+                    <div className="flex flex-col items-center text-center gap-4 p-6 bg-background rounded-lg shadow-md">
+                        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-primary-foreground font-bold text-xl">2</div>
+                        <h3 className="text-xl font-bold">Assign & Process</h3>
+                        <p className="text-muted-foreground text-sm">Admins assign the pending tests to available technicians. Technicians view their queue, perform the tests, and update the results.</p>
+                    </div>
+                    <div className="flex flex-col items-center text-center gap-4 p-6 bg-background rounded-lg shadow-md">
+                        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-primary-foreground font-bold text-xl">3</div>
+                        <h3 className="text-xl font-bold">Review & Deliver</h3>
+                        <p className="text-muted-foreground text-sm">Once results are recorded, they are available for review. Admins can monitor overall progress and ensure timely delivery of results.</p>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="testimonials" className="w-full py-12 md:py-24 lg:py-32 bg-background">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Trusted by Professionals</h2>
+                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  Hear what our users have to say about Nagari Lab.
+                </p>
+              </div>
+            </div>
+            <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-2 lg:grid-cols-3 mt-12">
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="space-y-4">
+                    <div className="flex">
+                      <Star className="text-yellow-400" />
+                      <Star className="text-yellow-400" />
+                      <Star className="text-yellow-400" />
+                      <Star className="text-yellow-400" />
+                      <Star className="text-yellow-400" />
+                    </div>
+                    <p className="text-muted-foreground text-sm">&quot;Nagari Lab has transformed our workflow. Test assignments and result tracking are now incredibly simple and efficient.&quot;</p>
+                    <div className="flex items-center gap-2">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="person portrait" />
+                        <AvatarFallback>JD</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="font-semibold text-sm">Dr. Jane Doe</p>
+                        <p className="text-xs text-muted-foreground">Lead Hematologist</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="pt-6">
+                <div className="space-y-4">
+                    <div className="flex">
+                      <Star className="text-yellow-400" />
+                      <Star className="text-yellow-400" />
+                      <Star className="text-yellow-400" />
+                      <Star className="text-yellow-400" />
+                      <Star className="text-yellow-400" />
+                    </div>
+                    <p className="text-muted-foreground text-sm">&quot;As a technician, having all my assigned tests in one place is a game-changer. The interface is clean and lets me focus on my work.&quot;</p>
+                    <div className="flex items-center gap-2">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="person portrait" />
+                        <AvatarFallback>MS</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="font-semibold text-sm">Michael Smith</p>
+                        <p className="text-xs text-muted-foreground">Lab Technician</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="pt-6">
+                <div className="space-y-4">
+                    <div className="flex">
+                      <Star className="text-yellow-400" />
+                      <Star className="text-yellow-400" />
+                      <Star className="text-yellow-400" />
+                      <Star className="text-yellow-400" />
+                      <Star className="text-yellow-400" />
+                    </div>
+                    <p className="text-muted-foreground text-sm">&quot;The administrative dashboard gives me a perfect overview of the entire lab&apos;s operations. It&apos;s powerful yet easy to use.&quot;</p>
+                    <div className="flex items-center gap-2">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="person portrait" />
+                        <AvatarFallback>SA</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="font-semibold text-sm">Sarah Adams</p>
+                        <p className="text-xs text-muted-foreground">Lab Manager</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+         <section className="w-full py-12 md:py-24 lg:py-32 bg-primary/10">
+            <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
+                <div className="space-y-3">
+                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
+                    Ready to Modernize Your Laboratory?
+                </h2>
+                <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                    Join Nagari Lab today and bring efficiency, accuracy, and security to your operations.
+                </p>
+                </div>
+                <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center">
+                    <Button asChild size="lg">
+                        <Link href="/signup">
+                            Sign Up for Free
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+                    </Button>
+                </div>
+            </div>
+        </section>
+
+
       </main>
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
         <p className="text-xs text-muted-foreground">&copy; 2024 Nagari Lab. All rights reserved.</p>
