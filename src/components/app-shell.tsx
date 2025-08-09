@@ -4,7 +4,6 @@ import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  BrainCircuit,
   Clipboard,
   FlaskConical,
   LayoutDashboard,
@@ -45,7 +44,6 @@ const navItems = [
   { href: '/admin/tests', label: 'Tests', icon: FlaskConical },
   { href: '/admin/technicians', label: 'Technicians', icon: Clipboard },
   { href: '/admin/assignments', label: 'Assignments', icon: FileText },
-  { href: '/admin/ai-insights', label: 'AI Insights', icon: BrainCircuit },
 ];
 
 function NavMenu() {
