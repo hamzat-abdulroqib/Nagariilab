@@ -58,11 +58,11 @@ export default function LandingPage() {
                 </div>
               </div>
               <img
-                src="https://placehold.co/600x400.png"
+                src="https://storage.googleapis.com/aif-studiobot-images/34f9a022-c43d-4c31-90a4-cb4a0553759c.png"
                 width="600"
                 height="400"
                 alt="Hero"
-                data-ai-hint="medical laboratory science"
+                data-ai-hint="medical setting"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full lg:order-last"
               />
             </div>
