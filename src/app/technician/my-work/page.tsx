@@ -37,7 +37,7 @@ import { PageHeader } from '@/components/page-header';
 // For demonstration, we'll assume technician with ID '2' is logged in.
 const LOGGED_IN_TECHNICIAN_ID = '2';
 
-function RecordResultDialog({ testId, currentResult }: { testId: string, currentResult: string | null }) {
+function RecordResultDialog({ testId, currentResult, onResultSaved }: { testId: string, currentResult: string | null, onResultSaved: () => void }) {
     const { toast } = useToast();
     const { updateTestResult, labTests } = useData();
     const [result, setResult] = React.useState(currentResult || '');
@@ -53,7 +53,13 @@ function RecordResultDialog({ testId, currentResult }: { testId: string, current
             });
         }
         setIsOpen(false);
+        onResultSaved();
     }
+    
+    // Update local state if the prop changes
+    React.useEffect(() => {
+        setResult(currentResult || '');
+    }, [currentResult]);
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -88,6 +94,8 @@ function RecordResultDialog({ testId, currentResult }: { testId: string, current
 export default function MyWorkPage() {
   const { toast } = useToast();
   const { labTests, technicians, completeTest } = useData();
+  // Force re-render when a result is saved
+  const [_, setForceRender] = React.useState({});
   
   const technician = technicians.find(t => t.id === LOGGED_IN_TECHNICIAN_ID);
 
@@ -144,7 +152,7 @@ export default function MyWorkPage() {
         <CardHeader>
           <CardTitle>My Assigned Tests</CardTitle>
           <CardDescription>
-            These are the tests currently assigned to you. Update their status once completed.
+            These are the tests currently assigned to you. Update their status and record results once completed.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -154,9 +162,9 @@ export default function MyWorkPage() {
                 <TableRow>
                   <TableHead>Test Name</TableHead>
                   <TableHead>Patient</TableHead>
-                  <TableHead>Date Assigned</TableHead>
+                  <TableHead>Result</TableHead>
                   <TableHead>Status</TableHead>
-                   <TableHead className="text-right">Action</TableHead>
+                  <TableHead className="text-right">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -167,9 +175,7 @@ export default function MyWorkPage() {
                         {test.testName}
                       </TableCell>
                       <TableCell>{test.patientName}</TableCell>
-                      <TableCell>
-                        {new Date(test.createdAt).toLocaleDateString()}
-                      </TableCell>
+                      <TableCell>{test.result || "N/A"}</TableCell>
                       <TableCell>
                          <Badge
                             variant={
@@ -189,7 +195,11 @@ export default function MyWorkPage() {
                            </Button>
                         )}
                         {test.status === 'Completed' && (
-                            <RecordResultDialog testId={test.id} currentResult={test.result} />
+                            <RecordResultDialog 
+                                testId={test.id} 
+                                currentResult={test.result}
+                                onResultSaved={() => setForceRender({})}
+                             />
                         )}
                       </TableCell>
                     </TableRow>
