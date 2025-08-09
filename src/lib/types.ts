@@ -1,3 +1,13 @@
+export type UserRole = 'Admin' | 'Technician';
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  password_bcrypt_hash: string; // In a real app, never store plain text passwords
+  role: UserRole;
+}
+
 export interface Patient {
   id: string;
   patientId: string;

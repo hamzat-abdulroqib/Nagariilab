@@ -5,7 +5,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { DataProvider } from '@/context/data-context';
 
 export const metadata: Metadata = {
-  title: 'MediTrack Lite',
+  title: 'Nagari Lab',
   description: 'Medical Laboratory Information Management System',
 };
 

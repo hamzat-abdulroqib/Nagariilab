@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -14,35 +15,35 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useData } from '@/context/data-context';
 import { useToast } from '@/hooks/use-toast';
 import { Logo } from '@/components/logo';
+import type { UserRole } from '@/lib/types';
 
-export default function LoginPage() {
+export default function SignupPage() {
   const router = useRouter();
-  const { login } = useData();
+  const { signup } = useData();
   const { toast } = useToast();
+  
+  const [name, setName] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [role, setRole] = React.useState<UserRole>('Technician');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const user = login(email, password);
-
-    if (user) {
+    try {
+      signup({ name, email, password, role });
       toast({
-        title: 'Login Successful',
-        description: `Welcome back, ${user.name}!`,
+        title: 'Signup Successful',
+        description: 'You can now log in with your credentials.',
       });
-      if (user.role === 'Admin') {
-        router.push('/admin/dashboard');
-      } else {
-        router.push('/technician/my-work');
-      }
-    } else {
+      router.push('/login');
+    } catch (error: any) {
       toast({
-        title: 'Login Failed',
-        description: 'Invalid email or password. Please try again.',
+        title: 'Signup Failed',
+        description: error.message,
         variant: 'destructive',
       });
     }
@@ -53,13 +54,24 @@ export default function LoginPage() {
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
           <Link href="/" className="flex items-center justify-center mb-4">
-             <Logo />
+            <Logo />
           </Link>
-          <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>Enter your email below to login to your account.</CardDescription>
+          <CardTitle className="text-2xl">Sign Up</CardTitle>
+          <CardDescription>Create an account to get started.</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Full Name</Label>
+              <Input 
+                id="name" 
+                type="text"
+                placeholder="John Doe" 
+                required 
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input 
@@ -69,7 +81,7 @@ export default function LoginPage() {
                 required 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-              />
+                />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
@@ -81,15 +93,28 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+            <div className="space-y-2">
+              <Label>Role</Label>
+              <RadioGroup defaultValue="Technician" value={role} onValueChange={(value) => setRole(value as UserRole)} className="flex gap-4">
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Admin" id="admin" />
+                  <Label htmlFor="admin">Admin</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Technician" id="technician" />
+                  <Label htmlFor="technician">Technician</Label>
+                </div>
+              </RadioGroup>
+            </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
             <Button type="submit" className="w-full">
-              Login
+              Create Account
             </Button>
             <div className="text-center text-sm">
-              Don&apos;t have an account?{' '}
-              <Link href="/signup" className="underline">
-                Sign up
+              Already have an account?{' '}
+              <Link href="/login" className="underline">
+                Login
               </Link>
             </div>
           </CardFooter>

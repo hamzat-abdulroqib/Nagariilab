@@ -2,10 +2,16 @@
 'use client';
 
 import * as React from 'react';
-import type { Patient, Technician, LabTest, Payment } from '@/lib/types';
+import type { Patient, Technician, LabTest, Payment, User, UserRole } from '@/lib/types';
 import { mockPatients, mockTechnicians, mockLabTests, mockPayments } from '@/lib/mock-data';
 
 type DataContextType = {
+  // Auth
+  users: User[];
+  signup: (userData: Omit<User, 'id' | 'password_bcrypt_hash'>) => User;
+  login: (email: string, pass: string) => User | null;
+
+  // Data
   patients: Patient[];
   technicians: Technician[];
   labTests: LabTest[];
@@ -24,11 +30,49 @@ type DataContextType = {
 const DataContext = React.createContext<DataContextType | undefined>(undefined);
 
 export function DataProvider({ children }: { children: React.ReactNode }) {
+  const [users, setUsers] = React.useState<User[]>([]);
   const [patients, setPatients] = React.useState<Patient[]>(mockPatients);
   const [technicians, setTechnicians] = React.useState<Technician[]>(mockTechnicians);
   const [labTests, setLabTests] = React.useState<LabTest[]>(mockLabTests);
   const [payments, setPayments] = React.useState<Payment[]>(mockPayments);
 
+  // --- AUTH ---
+  const signup = (userData: Omit<User, 'id' | 'password_bcrypt_hash'>) => {
+    const existingUser = users.find(u => u.email === userData.email);
+    if (existingUser) {
+        throw new Error('An account with this email already exists.');
+    }
+    
+    const newUser: User = {
+        id: (users.length + 1).toString() + Date.now().toString(),
+        ...userData,
+        // In a real app, you would hash the password here before saving.
+        // For this demo, we'll store it as is, but name the field to reflect best practice.
+        password_bcrypt_hash: userData.password, 
+    };
+
+    setUsers(prev => [newUser, ...prev]);
+
+    // If the new user is a technician, also create a technician profile
+    if (newUser.role === 'Technician') {
+        addTechnician({
+            name: newUser.name,
+            email: newUser.email,
+            phone: 'N/A', // Placeholder, could be part of signup form
+            specialization: 'General', // Placeholder
+        })
+    }
+    
+    return newUser;
+  }
+
+  const login = (email: string, pass: string) => {
+    const user = users.find(u => u.email === email && u.password_bcrypt_hash === pass);
+    return user || null;
+  }
+
+
+  // --- DATA MANAGEMENT ---
   const addPatient = (patientData: Omit<Patient, 'id' | 'patientId'>) => {
     const newId = (patients.length + 1).toString() + Date.now().toString();
     const newPatient: Patient = {
@@ -49,6 +93,10 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 
   const addTechnician = (technicianData: Omit<Technician, 'id'>) => {
     setTechnicians(prev => {
+        // Prevent duplicate technicians if a user signs up twice somehow
+        if (prev.some(t => t.email === technicianData.email)) {
+            return prev;
+        }
         const newId = (prev.length + 1).toString() + Date.now().toString();
         const newTechnician: Technician = {
             id: newId,
@@ -135,6 +183,9 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   return (
     <DataContext.Provider
       value={{
+        users,
+        signup,
+        login,
         patients,
         technicians,
         labTests,

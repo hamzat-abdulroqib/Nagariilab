@@ -2,14 +2,14 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TestTube, FlaskConical, Users, ShieldCheck } from 'lucide-react';
+import { Logo } from '@/components/logo';
 
 export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <header className="px-4 lg:px-6 h-14 flex items-center bg-background border-b">
         <Link href="#" className="flex items-center justify-center" prefetch={false}>
-          <TestTube className="h-6 w-6 text-primary" />
-          <span className="sr-only">MediTrack Lite</span>
+          <Logo />
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6">
           <Link
@@ -27,7 +27,7 @@ export default function LandingPage() {
             Login
           </Link>
           <Button asChild>
-            <Link href="/login">Get Started</Link>
+            <Link href="/signup">Get Started</Link>
           </Button>
         </nav>
       </header>
@@ -38,7 +38,7 @@ export default function LandingPage() {
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                    Streamline Your Lab with MediTrack Lite
+                    Streamline Your Lab with Nagari Lab
                   </h1>
                   <p className="max-w-[600px] text-muted-foreground md:text-xl">
                     A modern, efficient, and reliable Laboratory Information Management System designed to simplify your workflow.
@@ -48,6 +48,11 @@ export default function LandingPage() {
                   <Button asChild size="lg">
                     <Link href="/login">
                       Access Dashboard
+                    </Link>
+                  </Button>
+                  <Button asChild size="lg" variant="outline">
+                    <Link href="/signup">
+                      Sign Up
                     </Link>
                   </Button>
                 </div>
@@ -123,7 +128,7 @@ export default function LandingPage() {
         </section>
       </main>
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-        <p className="text-xs text-muted-foreground">&copy; 2024 MediTrack Lite. All rights reserved.</p>
+        <p className="text-xs text-muted-foreground">&copy; 2024 Nagari Lab. All rights reserved.</p>
       </footer>
     </div>
   );
