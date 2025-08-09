@@ -23,7 +23,7 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart';
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
-import { Users, FlaskConical, TestTube, ClipboardList, DollarSign } from 'lucide-react';
+import { Users, FlaskConical, TestTube, ClipboardList } from 'lucide-react';
 import type { ChartConfig } from '@/components/ui/chart';
 import { useData } from '@/context/data-context';
 import { format, subMonths } from 'date-fns';
