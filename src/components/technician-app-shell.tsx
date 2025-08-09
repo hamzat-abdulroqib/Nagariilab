@@ -8,7 +8,8 @@ import {
   Settings,
   Users,
   DollarSign,
-  FlaskConical
+  FlaskConical,
+  FilePenLine
 } from 'lucide-react';
 import {
   SidebarProvider,
@@ -37,9 +38,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Logo } from './logo';
 
 const navItems = [
-  { href: '/technician/my-work', label: 'My Work', icon: ClipboardList },
+  { href: '/technician/my-work', label: 'Record Results', icon: FilePenLine },
   { href: '/technician/add-patient', label: 'Add Patient', icon: Users },
-  { href: '/technician/log-test', label: 'Log Test', icon: FlaskConical },
   { href: '/technician/payments', label: 'Payments', icon: DollarSign },
 ];
 
